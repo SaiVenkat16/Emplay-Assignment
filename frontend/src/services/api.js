@@ -1,7 +1,10 @@
 import axios from 'axios';
 
-// Base URL — vite proxy వల్ల /prompts directly work అవుతుంది
-const API_BASE = '/prompts';
+// Dev లో: Vite proxy → /prompts → localhost:5000
+// Production లో: VITE_BACKEND_URL=https://your-render-url.onrender.com
+const API_BASE = import.meta.env.VITE_BACKEND_URL
+  ? `${import.meta.env.VITE_BACKEND_URL}/prompts`
+  : '/prompts';
 
 // ─── GET /prompts — అన్ని prompts తీసుకొస్తుంది ──────────────
 export const getAllPrompts = async () => {

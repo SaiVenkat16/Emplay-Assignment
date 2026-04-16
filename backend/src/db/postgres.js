@@ -1,14 +1,20 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-// PostgreSQL connection pool create chestundi
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'emplay_db',
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
-});
+// Production (Render): DATABASE_URL = full connection string
+// Development: separate host/port/user/password vars
+const pool = process.env.DATABASE_URL
+  ? new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }, // Render SSL require చేస్తుంది
+    })
+  : new Pool({
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT) || 5432,
+      database: process.env.DB_NAME || 'emplay_db',
+      user: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+    });
 
 // Connection test
 pool.connect((err, client, release) => {
