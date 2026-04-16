@@ -8,8 +8,8 @@ A full-stack web application to store and manage AI image generation prompts. Us
 
 | | URL |
 |---|---|
-| Frontend | https://your-app.vercel.app |
-| Backend API | https://your-backend.onrender.com |
+| Frontend | https://emplay-assignment.vercel.app |
+| Backend API | https://emplay-assignment.onrender.com |
 
 > Update these links after deployment.
 
