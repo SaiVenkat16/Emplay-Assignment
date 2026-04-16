@@ -1,14 +1,22 @@
 const Redis = require('ioredis');
 require('dotenv').config();
 
-// Production (Upstash): REDIS_URL=rediss://default:pass@host.upstash.io:6380
+// Production (Upstash): REDIS_URL=rediss://default:pass@host.upstash.io:6379
 // Development (local/docker): REDIS_HOST + REDIS_PORT
 let redis;
 
 if (process.env.REDIS_URL) {
-  // Upstash SSL connection
-  redis = new Redis(process.env.REDIS_URL, {
-    tls: { rejectUnauthorized: false },
+  // URL నుండి explicit గా parse చేసి connect చేస్తాం
+  // ioredis full URL తో "AUTH default PASSWORD" పంపిస్తుంది
+  // Upstash only password expect చేస్తుంది — explicit config fix చేస్తుంది
+  const url = new URL(process.env.REDIS_URL);
+  redis = new Redis({
+    host: url.hostname,
+    port: parseInt(url.port) || 6379,
+    password: url.password,
+    tls: {},
+    connectTimeout: 10000,
+    maxRetriesPerRequest: 3,
   });
 } else {
   // Local / Docker connection
